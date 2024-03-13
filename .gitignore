@@ -1,7 +1,6 @@
 # project specific stuff
 datasets/*.txt
 
-
 # other basic stuff
 .DS_Store
 

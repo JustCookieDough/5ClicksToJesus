@@ -1,0 +1,19 @@
+{# no-path.html #}
+
+{% extends "template.html" %}
+
+{% block style %}
+.message-box {
+    max-width: 60%;
+    background-color: var(--highlight);
+    
+    padding: .5rem 1rem .5rem;
+    border-radius: .5rem;
+}
+{% endblock style %}
+
+{% block input %}{{page}}{% endblock input %}
+
+{% block content %}
+<span class="message-box">There is <b>no path</b> from {{ page }} to Jesus.</span>
+{% endblock content %}
