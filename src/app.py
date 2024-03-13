@@ -14,7 +14,7 @@ def index():
 
 @app.route('/solution')
 def solution():
-    start_page = request.args.get('page')
+    start_page = request.args.get('page').strip()
 
     try:
         start_id = db.get_id_from_name(start_page)

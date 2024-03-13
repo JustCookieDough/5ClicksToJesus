@@ -59,5 +59,4 @@ class Database():
 
     def get_path(self, id: int) -> list[int]:
         # TODO: implement this (lmao easier said than done)
-        raise KeyError("no path!")
         return [id]  # just to see if the front end is working
