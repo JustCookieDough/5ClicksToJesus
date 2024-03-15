@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5C2J Solver</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+    <style>
+        /* google fonts stuff */
+        .space-mono-regular {
+        font-family: "Space Mono", monospace;
+        font-weight: 400;
+        font-style: normal;
+        }
+
+        .space-mono-bold {
+        font-family: "Space Mono", monospace;
+        font-weight: 700;
+        font-style: normal;
+        }
+
+        .space-mono-regular-italic {
+        font-family: "Space Mono", monospace;
+        font-weight: 400;
+        font-style: italic;
+        }
+
+        .space-mono-bold-italic {
+        font-family: "Space Mono", monospace;
+        font-weight: 700;
+        font-style: italic;
+        }
+
+        .material-symbols-outlined {
+        font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24
+        }
+        /* end google fonts stuff*/
+
+        :root {
+            font-size: 2vh;
+            font-family: "Space Mono", monospace;
+            text-align: center;
+        }
+
+        body.light {
+
+        }
+
+        body.dark {
+            --bg: #101010;
+            --highlight: #202020;
+
+            --main-accent: #ff8426;
+            --semi-accent: #ffb780;
+
+            --text: #ffffff;
+        }
+
+        body {
+            background-color: var(--bg);
+            margin: 0;
+            width: 100%;
+            height: 100%;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            color: var(--text);
+        }
+
+        div.content {
+            --content-aspect-ratio: .5;
+
+            width: min(calc(100vh * var(--content-aspect-ratio)), 100vw);
+            aspect-ratio: var(--content-aspect-ratio);
+            
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        div > * {
+            margin: .5rem 0 .5rem;
+        }
+
+        b {
+            color: var(--main-accent)
+        }
+
+        h1 {
+            margin: 0;
+        }
+        
+        .input-bar {
+            width: 60%;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+
+            border-bottom: .2rem solid var(--main-accent);
+            border-radius: .2rem;
+            padding-bottom: .1rem;
+        }
+
+        .input-bar input {
+            font-size: 1rem;
+            width: 85%;
+
+            background: none;
+            border: none;
+            
+            color: var(--text);
+            font-family: inherit;
+        }
+
+        .input-bar input::placeholder {
+            color: var(--minor-text)
+        }
+
+        .input-bar span {
+            display: block;
+            color: var(--main-accent);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .line {
+            width: 90%;
+            height: .4rem;
+            border-radius: .2rem;
+            background-color: var(--highlight);
+            display: block;
+        }
+        {% block style %}{% endblock style %}
+    </style>
+</head>
+<body class="dark">
+    <div class="content">
+        <h1>5C2J Solver</h1>
+        <div class="input-bar">
+            <input type="text" placeholder="Input Page..." value="{% block input %}{% endblock input%}" id="input">
+            <span id="submit" class="material-symbols-outlined">search</span>
+        </div>
+        {% block line %}<span class="line"></span>{% endblock line %}
+        {% block content %}{% endblock content %}
+    </div>
+    <script>
+        const input = document.getElementById("input")
+        const submit_button = document.getElementById("submit")
+
+        // event listeners
+        submit_button.addEventListener('click', submit)
+        input.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') { submit() }
+        });
+
+        function submit() {
+            let uri = encodeURIComponent(input.value)
+            window.location.href="./solution?page=" + uri
+        }
+    </script>
+</body>
+</html>

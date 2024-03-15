@@ -3,13 +3,13 @@ from flask import Flask, render_template, request
 from search import Database
 
 # setting up database and app
-db = Database("../datasets/old/edges.txt.gz", "../datasets/old/titles.txt.gz")
+db = Database("../datasets/old/edges.txt.gz", "../datasets/pages.txt.gz")
 app = Flask(__name__)
 
 
 @app.route('/')
 def index():
-    return render_template("index.html")
+    return render_template("index.jinja")
 
 
 @app.route('/solution')
@@ -17,16 +17,16 @@ def solution():
     start_page = request.args.get('page').strip()
 
     try:
-        start_id = db.get_id_from_name(start_page)
+        start_id = db.get_id_from_name(start_page.replace(" ", "_"))
     except:
-        return render_template("bad-page.html", page=start_page)
+        return render_template("bad-page.jinja", page=start_page)
     
     try:
         path_ids = db.get_path(start_id)[:-1]  # removes jesus from end of list
     except:
-        return render_template("no-path.html", page=start_page)
+        return render_template("no-path.jinja", page=start_page)
 
-    return render_template("solution.html", sites=ids_to_sites_dicts(path_ids), clicks=len(path_ids), start=start_page)
+    return render_template("solution.jinja", sites=ids_to_sites_dicts(path_ids), clicks=len(path_ids), start=start_page)
 
 
 def ids_to_sites_dicts(ids: list[id]) -> list[dict[str, str]]:
@@ -41,9 +41,13 @@ def ids_to_sites_dicts(ids: list[id]) -> list[dict[str, str]]:
     out_list = []
     for id in ids:
         name = db.get_name_from_id(id)
-        url = "https://en.wikipedia.org/wiki/" + name.replace(" ", "_")
-        out_list.append({"name": name, "url": url})
+        url = "https://en.wikipedia.org/wiki/" + name
+        out_list.append({"name": prettify(name), "url": url})
     return out_list
+
+
+def prettify(string: str) -> str:
+    return string.replace("_", " ")
 
 
 if __name__ == '__main__':

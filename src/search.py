@@ -31,7 +31,7 @@ class Database():
         with gzip.open(path, "r") as file:
             for line in file:
                 data = str(line, 'utf-8').strip().split(" ")
-                out_dict[int(data[0])] = " ".join(data[1:])
+                out_dict[int(data[0])] = str(data[1]).replace("\\'", "'").replace('\\"','"').replace('\\\\', '\\')
         return out_dict        
 
 
@@ -64,8 +64,4 @@ class Database():
 
         # everything below was added by scott to make it easier to test the front-end
         # delete it when you actually write this
-
-        if id == 1181563:                               # id for Bono (yes this is a weird example but its the first one i found)
-            return [1181563, 1179627, 1591719, 60047]   # Bono -> U2 -> Yahweh (song) -> Jesus (jesus not included cause thats how the front- works)
-                                                        # this also isnt the fastest route i think but it works for the time being
-        return [id, 60047]  # just a base case
+        return [id, 1095706]  # just a base case

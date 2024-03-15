@@ -1,0 +1,55 @@
+{# solution.jinja #}
+
+{% extends "template.jinja" %}
+
+{% block style %}
+.steps {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.steps a {
+    text-decoration: none;
+    color: inherit;
+
+    padding: .5rem 1rem;
+    border-radius: .5rem;
+    background-color: var(--highlight);
+
+    margin: .25rem;
+}
+
+.steps .arrow{
+    display: block;
+    clip-path: polygon(35% 0%, 35% 60%, 0% 60%, 50% 100%, 100% 60%, 65% 60%, 65% 0%);
+    
+    width: 1rem;
+    height: 1rem;
+    margin: .25rem;
+
+    background-color: var(--text);
+}
+
+.clicks-display {
+    max-width: 60%;
+    background-color: var(--highlight);
+    
+    padding: .5rem 1rem .5rem;
+    border-radius: .5rem;
+}
+{% endblock style %}
+
+{% block input %}{{start}}{% endblock input %}
+
+{% block content %}
+<div class="steps">
+    {% for site in sites %}
+    <a href="{{ site.url }}">{{ site.name }}</a><span class="arrow"></span>
+    {% endfor %}
+    <a href="https://en.wikipedia.org/wiki/Jesus">Jesus</a>  {# it always ends in jesus #}
+</div>
+<span class="clicks-display">You can get from <br><b>{{ start }}</b><br>to Jesus in <br> <b>{{ clicks }} click{% if clicks != 1 %}s{% endif %}.</b></span>
+{% endblock content %}
+
