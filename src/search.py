@@ -10,6 +10,7 @@ class Node():
         pass
 
 
+# TODO: all of this needs to be rewritten for the new db's from wikidump
 class Database():
     """
     # TODO: write a docstring and also finish this lmao
@@ -24,6 +25,7 @@ class Database():
         loads the titles into a dict: {id: name}
 
         # TODO: write better docstring
+        # TODO: rewrite for wikidump
         """
         out_dict = {}
         with gzip.open(path, "r") as file:
@@ -59,4 +61,11 @@ class Database():
 
     def get_path(self, id: int) -> list[int]:
         # TODO: implement this (lmao easier said than done)
-        return [id]  # just to see if the front end is working
+
+        # everything below was added by scott to make it easier to test the front-end
+        # delete it when you actually write this
+
+        if id == 1181563:                               # id for Bono (yes this is a weird example but its the first one i found)
+            return [1181563, 1179627, 1591719, 60047]   # Bono -> U2 -> Yahweh (song) -> Jesus (jesus not included cause thats how the front- works)
+                                                        # this also isnt the fastest route i think but it works for the time being
+        return [id, 60047]  # just a base case

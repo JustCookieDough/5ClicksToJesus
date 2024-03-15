@@ -3,7 +3,7 @@ from flask import Flask, render_template, request
 from search import Database
 
 # setting up database and app
-db = Database("../datasets/edges.txt.gz", "../datasets/titles.txt.gz")
+db = Database("../datasets/old/edges.txt.gz", "../datasets/old/titles.txt.gz")
 app = Flask(__name__)
 
 
@@ -22,7 +22,7 @@ def solution():
         return render_template("bad-page.html", page=start_page)
     
     try:
-        path_ids = db.get_path(start_id)
+        path_ids = db.get_path(start_id)[:-1]  # removes jesus from end of list
     except:
         return render_template("no-path.html", page=start_page)
 

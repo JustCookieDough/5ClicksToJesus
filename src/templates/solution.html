@@ -50,6 +50,6 @@
     {% endfor %}
     <a href="https://en.wikipedia.org/wiki/Jesus">Jesus</a>  {# it always ends in jesus #}
 </div>
-<span class="clicks-display">You can get from <br><b>{{ start }}</b><br>to Jesus in <br> <b>{{ clicks }} clicks.</b></span>
+<span class="clicks-display">You can get from <br><b>{{ start }}</b><br>to Jesus in <br> <b>{{ clicks }} click{% if clicks != 1 %}s{% endif %}.</b></span>
 {% endblock content %}
 

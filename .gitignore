@@ -1,5 +1,9 @@
 # project specific stuff
 datasets/*.txt
+datasets/*.sql
+datasets/*.sql.gz
+datasets/old/*.txt
+notes/
 
 # other basic stuff
 .DS_Store
