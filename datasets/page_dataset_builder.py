@@ -32,9 +32,9 @@ class Page():
         return self.namespace == 0 and not self.is_redirect
 
 
-def convert_db_line(line: str) -> list[Page]:
+def convert_db_block(block: str) -> list[Page]:
     out_list = []
-    page_strings = line[27:-3].split("),(")
+    page_strings = block[27:-3].split("),(")
     p = re.compile("(\d+),(\d+),'(.+?)',(\d+),")
     for page_string in page_strings:
         r = p.search(page_string)
@@ -45,7 +45,7 @@ def convert_db_line(line: str) -> list[Page]:
                 r.group(3),             # page title (slice to remove single-quotes in string)
                 r.group(4) == "1"))     # if page is a redirect page
         except:
-            print('fuck shit line conversion broke, heres the page string')
+            print('fuck shit page conversion broke, heres the page string')
             print(page_string)
 
     return out_list
@@ -59,8 +59,8 @@ def count_valid(pages: list[Page]) -> float:
     return count
 
 
-def check_valid_line(line: str) -> bool:
-    return line[:25] == "INSERT INTO `page` VALUES"
+def check_valid_block(block: str) -> bool:
+    return block[:25] == "INSERT INTO `page` VALUES"
 
 
 def estimate_file_size(pages: list[Page]) -> int:
@@ -84,19 +84,19 @@ def print_stats(file: FileIO, header_size: int) -> None:
     n = 0
     while True:
         if (n % 20 == 0 and n > 0):
-            print("proportion of valid pages as of db line " + str(n) + ": " + str(valid_pages / total_pages))
+            print("proportion of valid pages as of block " + str(n) + ": " + str(valid_pages / total_pages))
         n += 1
 
-        line = str(file.readline(), 'utf-8')
-        if not check_valid_line(line):
+        block = str(file.readline(), 'utf-8')
+        if not check_valid_block(block):
             break
-        pages = convert_db_line(line)
+        pages = convert_db_block(block)
         valid_pages += count_valid(pages)
         total_pages += len(pages)
         file_size += estimate_file_size(pages)
     
     print("\ndone! final stats:")
-    print("number of database data lines: " + str(n))
+    print("number of database data block: " + str(n))
     print("\nnumber of total pages: " + str(total_pages))
     print("number of valid pages: " + str(valid_pages))
     print("proportion of valid pages: " + str(valid_pages / total_pages))
@@ -122,13 +122,34 @@ def write_db_file(db_file: FileIO, out_file: FileIO, header_size: int) -> None:
             print("progress: working on block " + str(n))
         n += 1
 
-        line = str(db_file.readline(), 'utf-8')
-        if not check_valid_line(line):
+        block = str(db_file.readline(), 'utf-8')
+        if not check_valid_block(block):
             break
-        pages = convert_db_line(line)
+        pages = convert_db_block(block)
         write_pages_to_file(pages, out_file)
     
     print("done! file has been written.")
+
+
+def reverse_db_file(db_file: FileIO, out_file: FileIO) -> None:
+    while True:
+        line = str(db_file.readline().strip())
+        if line == "":
+            break
+        data = line.split(" ")
+        out_file.write(f"{data[1]} {data[0]}\n")
+
+
+def sort_db(in_file: FileIO, out_file: FileIO) -> None:
+    db_dict = {}
+    for line in in_file:
+        data = str(line).strip().split(" ")
+        db_dict[data[0]] = data[1]
+    
+    db_dict = dict(sorted(db_dict.items()))
+
+    for key in db_dict:
+        out_file.write(f"{key} {db_dict[key]}\n")
 
 
 def main():
@@ -136,9 +157,17 @@ def main():
     # with gzip.open(PATH, "r") as file:
     #     print_stats(file, HEADER_SIZE)
 
-    with gzip.open(PATH, "r") as db, open("pages.txt", "w") as out:
-        write_db_file(db, out, HEADER_SIZE)
-        
+    # create db file 
+    # with gzip.open(PATH, "r") as db, open("pages.txt", "w") as out:
+    #     write_db_file(db, out, HEADER_SIZE)
+
+    # create reverse database
+    # with open("pages.txt", "r") as db_file, open("pages-rev.txt", "w") as out_file:
+    #     reverse_db_file(db_file, out_file)
+
+    # sort reversed database
+    with open("pages-rev.txt", "r") as in_file, open("pages-rev-sorted.txt", "w") as out_file:
+        sort_db(in_file, out_file)
 
 if __name__ == "__main__":
     main()
