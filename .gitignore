@@ -3,6 +3,7 @@ datasets/*.txt
 datasets/*.sql
 datasets/*.sql.gz
 datasets/old/*.txt
+datasets/links.txt.gz
 notes/
 
 # other basic stuff
