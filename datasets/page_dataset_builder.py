@@ -15,22 +15,27 @@ HEADER_SIZE = 50
 
 class Page():
     page_id: int
-    namespace: int
+    _namespace: int
     title: str
-    is_redirect: bool
+    _is_redirect: bool
     
     def __init__(self, page_id: int, namespace: int, title: str, is_redirect: bool) -> None:
         self.page_id = page_id
-        self.namespace = namespace
+        self._namespace = namespace
         self.title = title
-        self.is_redirect = is_redirect
+        self._is_redirect = is_redirect
 
     def __str__(self) -> str:
-        return f"{self.page_id},{self.namespace},{self.title},{1 if self.is_redirect else 0}"
+        return f"{self.page_id},{self._namespace},{self.title},{1 if self.is_redirect else 0}"
     
     def is_valid(self) -> bool:
-        return self.namespace == 0 and not self.is_redirect
-
+        return self._namespace == 0 and not self._is_redirect
+    
+    def is_valid_redirect(self) -> bool:
+        return self._namespace == 0 and self._is_redirect
+    
+    def is_ns0(self) -> bool:
+        return self._namespace == 0
 
 def convert_db_block(block: str) -> list[Page]:
     out_list = []
@@ -131,6 +136,69 @@ def write_db_file(db_file: FileIO, out_file: FileIO, header_size: int) -> None:
     print("done! file has been written.")
 
 
+def add_to_redirect_set(pages: list[Page], rd_set: set[int]) -> None:
+    for page in pages:
+        if page.is_valid_redirect():
+            rd_set.add(page.page_id)
+
+
+def make_redirect_set(db_file: FileIO, header_size: int) -> set[int]:
+
+    print("progress: skipping header")
+    for i in range(header_size):
+        db_file.readline()
+
+    print("progress: starting calculations")
+    out_set = set()
+    n = 0
+    while True:
+        if (n % 20 == 0 and n > 0):
+            print("progress: working on block " + str(n))
+        n += 1
+
+        block = str(db_file.readline(), 'utf-8')
+        if not check_valid_block(block):
+            break
+        pages = convert_db_block(block)
+        add_to_redirect_set(pages, out_set)
+
+    
+    print("done! set is made.")
+    return out_set
+
+
+def add_to_ns0_dict(pages: list[Page], ns0_dict: dict[str, int]) -> None:
+    for page in pages:
+        if page.is_ns0():
+            ns0_dict[page.title] = page.page_id
+
+
+def make_ns0_dict(db_file: FileIO, header_size: int) -> dict[str, int]:
+
+    print("progress: skipping header")
+    for i in range(header_size):
+        db_file.readline()
+
+    print("progress: starting calculations")
+    n = 0
+    out_dict = {}
+    while True:
+        if (n % 20 == 0 and n > 0):
+            print("progress: working on block " + str(n))
+        n += 1
+
+        block = str(db_file.readline(), 'utf-8')
+        if not check_valid_block(block):
+            break
+        pages = convert_db_block(block)
+        add_to_ns0_dict(pages, out_dict)
+    
+    print("done! dict is made.")
+    return out_dict
+
+
+# extra stuff
+
 def reverse_db_file(db_file: FileIO, out_file: FileIO) -> None:
     while True:
         line = str(db_file.readline().strip())
@@ -158,16 +226,16 @@ def main():
     #     print_stats(file, HEADER_SIZE)
 
     # create db file 
-    # with gzip.open(PATH, "r") as db, open("pages.txt", "w") as out:
-    #     write_db_file(db, out, HEADER_SIZE)
+    with gzip.open(PATH, "r") as db, open("pages.txt", "w") as out:
+        write_db_file(db, out, HEADER_SIZE)
 
     # create reverse database
     # with open("pages.txt", "r") as db_file, open("pages-rev.txt", "w") as out_file:
     #     reverse_db_file(db_file, out_file)
 
     # sort reversed database
-    with open("pages-rev.txt", "r") as in_file, open("pages-rev-sorted.txt", "w") as out_file:
-        sort_db(in_file, out_file)
+    # with open("pages-rev.txt", "r") as in_file, open("pages-rev-sorted.txt", "w") as out_file:
+    #     sort_db(in_file, out_file)
 
 if __name__ == "__main__":
     main()
