@@ -1,7 +1,7 @@
 # project specific stuff
 datasets/*.txt
 datasets/*.sql
-datasets/*.sql.gz
+datasets/dumps/
 datasets/old/*.txt
 datasets/links.txt.gz
 notes/

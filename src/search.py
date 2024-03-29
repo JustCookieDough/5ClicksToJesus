@@ -17,7 +17,7 @@ class _Node:
     Representation Invariants:
         - self not in self.out_neighbors
         - self.id >= 0
-        - self.next_node_to_target != self.id
+        - self.next_node_to_target != self.id`
         - self.next_node_to_target in out_neighbors
     """
     id: int
@@ -150,14 +150,21 @@ class Database:
 
         If there is a page with no neighbors it will not be in the edges file and hence won't be
         read into the graph. Do we want to change this?
+        
+        nah should be fine. we can be smarter about it for memory purposes but it wont change 
+        how the function runs
         """
         graph = Graph()
-        with open(path, 'r') as file:
-            reader = csv.reader(file)
-            for row in reader:
-                graph.add_node(row[0])
-                graph.add_node(row[1])
-                graph.add_edge(row[0], row[1])
+        with gzip.open(path, 'r') as file:
+            i = 0
+            for line in file:
+                print(str(round(i/6398388.68, 2)) + "%")
+                i += 1
+
+                edges = str(line, "utf-8").strip().split(" ")
+                graph.add_node(edges[0])
+                graph.add_node(edges[1])
+                graph.add_edge(edges[0], edges[1])
         return graph
 
     def get_name_from_id(self, id: int) -> str:
