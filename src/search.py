@@ -30,6 +30,7 @@ class _Node:
         self.id = id
         self.out_neighbors = out_neighbors
         self.in_neighbors = in_neighbors
+        self.next_node_to_target = None
 
 
 class Graph:
@@ -47,7 +48,7 @@ class Graph:
 
     def __init__(self) -> None:
         """Initialize an empty graph (no nodes or edges)."""
-        self._ndoes = {}
+        self._nodes = {}
 
     def add_node(self, id: Any) -> None:
         """Add a node with the given id to this graph.
@@ -71,7 +72,7 @@ class Graph:
         """
         if id1 in self._nodes and id2 in self._nodes:
             v1 = self._nodes[id1]
-            v2 = self._ndoes[id2]
+            v2 = self._nodes[id2]
 
             v1.out_neighbors.add(v2)
             v2.in_neighbors.add(v1)
@@ -89,17 +90,13 @@ class Graph:
             raise ValueError
         self._nodes[target_id].next_node_to_target = -1
         self.target_id = target_id
-        self._compute_paths_helper(target_id)
-
-    def _compute_paths_helper(self, target_id) -> None:
-        """
-        Recursively define the next node in the path to target. Helper for compute_paths,
-        """
-        target = self._nodes[target_id]
-        for node in target.in_neighbors:
-            if node.next_node_to_target is None:
-                node.next_node_to_target = target
-                self.compute_paths(node.id)
+        q = [target_id]
+        while len(q) != 0:
+            curr = q.pop(0)
+            for node in self._nodes[curr].in_neighbors:
+                if node.next_node_to_target is None:
+                    node.next_node_to_target = self._nodes[curr]
+                    q.append(node.id)
 
     def get_path(self, id: int) -> list[int]:
         """Return a list of the id's of the shortest path to the target. Returns an empty list if
