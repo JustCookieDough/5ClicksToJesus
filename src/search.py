@@ -2,7 +2,7 @@ from __future__ import annotations
 import gzip
 from typing import Any
 import csv
-
+import os
 
 class _Node:
     """A node in a graph used to represent a Wikipedia page.
@@ -21,11 +21,11 @@ class _Node:
         - self.next_node_to_target in out_neighbors
     """
     id: int
-    out_neighbors: set[_Node]
-    in_neighbors: set[_Node]
+    out_neighbors: list[_Node]
+    in_neighbors: list[_Node]
     next_node_to_target: _Node
 
-    def __init__(self, id: int, out_neighbors: set[_Node], in_neighbors: set[_Node]) -> None:
+    def __init__(self, id: int, out_neighbors: list[_Node]=[], in_neighbors: list[_Node]=[]) -> None:
         """Initialize a new node with the given item and neighbours."""
         self.id = id
         self.out_neighbors = out_neighbors
@@ -59,7 +59,7 @@ class Graph:
             - id not in self._nodes
         """
         if id not in self._nodes:
-            self._nodes[id] = _Node(id, set(), set())
+            self._nodes[id] = _Node(id)
 
     def add_edge(self, id1: Any, id2: Any) -> None:
         """Add an edge from the node with id1 to the node with id2 in this
@@ -74,8 +74,8 @@ class Graph:
             v1 = self._nodes[id1]
             v2 = self._nodes[id2]
 
-            v1.out_neighbors.add(v2)
-            v2.in_neighbors.add(v1)
+            v1.out_neighbors.append(v2)
+            v2.in_neighbors.append(v1)
         else:
             raise ValueError
 
@@ -126,7 +126,7 @@ class Database:
     def __init__(self, edge_file_path, title_file_path) -> None:
         self._titles = self._load_titles(title_file_path)
         self._graph = self._load_graph(edge_file_path)
-        self._graph.compute_paths()
+        self._graph.compute_paths(1095706)
 
     def _load_titles(self, path: str) -> dict[int, str]:  # slow and bad but works
         """
@@ -158,13 +158,22 @@ class Database:
         with gzip.open(path, 'r') as file:
             i = 0
             for line in file:
-                print(str(round(i/6398388.68, 2)) + "%")
+                # everything between this is debug stuff
+                if i % 640000 == 0:
+                    os.system('cls' if os.name == 'nt' else 'clear')
+              
+              
+              
+              
+              
+                    print(str(round(i/6238429, 1)) + "%")
                 i += 1
+                # end debug stuff
 
                 edges = str(line, "utf-8").strip().split(" ")
-                graph.add_node(edges[0])
-                graph.add_node(edges[1])
-                graph.add_edge(edges[0], edges[1])
+                graph.add_node(int(edges[0]))
+                graph.add_node(int(edges[1]))
+                graph.add_edge(int(edges[0]), int(edges[1]))
         return graph
 
     def get_name_from_id(self, id: int) -> str:
