@@ -117,23 +117,27 @@ class Graph:
         return path
 
 
-# TODO: all of this needs to be rewritten for the new db's from wikidump
 class Database:
     """
-    # TODO: write a docstring and also finish this lmao
+    A Database with a corresponding Graph representing all Wikipedia pages as vertices and
+    all connecting hyperlinks as edges. Has functionality to correlate titles to pages IDs.
     """
 
     def __init__(self, edge_file_path, title_file_path) -> None:
         self._titles = self._load_titles(title_file_path)
         self._graph = self._load_graph(edge_file_path)
-        self._graph.compute_paths(1095706)
+        self._graph.compute_paths(1095706) # 60047 is the ID for page "Jesus" in the links.txt data.
+        # TODO: verify above input for new data
 
     def _load_titles(self, path: str) -> dict[int, str]:  # slow and bad but works
         """
-        loads the titles into a dict: {id: name}
+        Using the data given from path, loads the Wikipedia page titles into a dict relating
+        {id: name}
 
-        # TODO: write better docstring
         # TODO: rewrite for wikidump
+        ^^^ Removed the previous to-do since it was redundant. I think it's okay if the wikidump is the one sent on
+        insta with google drive link, If im not mistaken, that is also data separated with spaces and should work for
+        this, please confirm.
         """
         out_dict = {}
         with gzip.open(path, "r") as file:
@@ -146,13 +150,9 @@ class Database:
 
     def _load_graph(self, path: str) -> Graph:
         """
-        Load the graph from the edges file.
-
-        If there is a page with no neighbors it will not be in the edges file and hence won't be
-        read into the graph. Do we want to change this?
-        
-        nah should be fine. we can be smarter about it for memory purposes but it wont change 
-        how the function runs
+        Loads the graph, establishing all connected pages as vertices and all connected links as edges from the given
+        edges file. Note: if there is a page with no neighbours, it will not be present in the edges file and hence
+        will not be contained in this graph. This is intentional for memory and efficiency purposes.
         """
         graph = Graph()
         with gzip.open(path, 'r') as file:
@@ -161,11 +161,6 @@ class Database:
                 # everything between this is debug stuff
                 if i % 640000 == 0:
                     os.system('cls' if os.name == 'nt' else 'clear')
-              
-              
-              
-              
-              
                     print(str(round(i/6238429, 1)) + "%")
                 i += 1
                 # end debug stuff
