@@ -31,3 +31,28 @@ class Page:
     
     def is_ns0(self) -> bool:
         return self._namespace == 0
+    
+
+class DatabaseInfo:
+    header_size: int
+    pattern: str
+
+    def __init__(self, header_size: int, pattern_string: str) -> None:
+        self.pattern = pattern_string
+        self.header_size = header_size
+
+
+class Version:
+
+
+    def __init__(self, version: str) -> None:
+        if version == "1.41":
+            self.links = DatabaseInfo(43, "(\d+),(\d+),'(.+?)',(\d+),")
+            self.pages = DatabaseInfo(50, "(\d+),(\d+),'(.+?)',(\d+),")
+            self.redirects = DatabaseInfo(40, "(\d+),([\d-]+),'(.+?)',")
+        elif version == "1.15":
+            self.links = DatabaseInfo(37, "(\d+),(\d+),'(.+?)'")
+            self.pages = DatabaseInfo(47, "(\d+),(\d+),'(.+?)','.*',\d+,(\d+),")
+            self.redirects = DatabaseInfo(37, "(\d+),([\d-]+),'(.+?)'")
+        else:
+            raise ValueError(f"MediaWiki version {version} is not supported.")

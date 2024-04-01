@@ -5,12 +5,12 @@ that can be used in the app. removes all data not used in our project.
 
 import re
 from io import FileIO
-from datatypes import Page
+from datatypes import Page, DatabaseInfo
 
-def convert_db_block(block: str) -> list[Page]:
+def convert_db_block(block: str, pattern: str) -> list[Page]:
     out_list = []
     page_strings = block[27:-3].split("),(")
-    p = re.compile("(\d+),(\d+),'(.+?)',(\d+),")
+    p = re.compile(pattern)
     for page_string in page_strings:
         r = p.search(page_string)
         try:
@@ -33,15 +33,15 @@ def write_pages_to_file(pages: list[Page], file: FileIO) -> None:
             file.write(f"{page.page_id} {page.title}\n")
 
 
-def make_db(db_file: FileIO, out_file: FileIO, header_size: int) -> None:
-    for i in range(header_size):
+def make_db(db_file: FileIO, out_file: FileIO, db_info: DatabaseInfo) -> None:
+    for i in range(db_info.header_size):
         db_file.readline()
 
     while True:
         block = str(db_file.readline(), 'utf-8')
         if not check_valid_block(block):
             break
-        pages = convert_db_block(block)
+        pages = convert_db_block(block, db_info.pattern)
         write_pages_to_file(pages, out_file)
 
 
@@ -51,8 +51,8 @@ def add_to_ns0_dict(pages: list[Page], ns0_dict: dict[str, int]) -> None:
             ns0_dict[page.title] = page.page_id
 
 
-def make_ns0_dict(db_file: FileIO, header_size: int) -> dict[str, int]:
-    for i in range(header_size):
+def make_ns0_dict(db_file: FileIO, db_info: DatabaseInfo) -> dict[str, int]:
+    for i in range(db_info.header_size):
         db_file.readline()
 
     out_dict = {}
@@ -61,7 +61,7 @@ def make_ns0_dict(db_file: FileIO, header_size: int) -> dict[str, int]:
         block = str(db_file.readline(), 'utf-8')
         if not check_valid_block(block):
             break
-        pages = convert_db_block(block)
+        pages = convert_db_block(block, db_info.pattern)
         add_to_ns0_dict(pages, out_dict)
     
     return out_dict

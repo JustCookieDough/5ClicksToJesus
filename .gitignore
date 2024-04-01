@@ -2,13 +2,14 @@
 datasets/*.txt
 datasets/*.sql
 datasets/dumps/
-datasets/old/*.txt
-datasets/links.txt.gz
-notes/
+datasets/bad_garbage_dataset_that_i_hate/*.txt
+datasets/current/links.txt.gz
+datasets/2010/links.txt.gz
 
 # other basic stuff
 .DS_Store
-
+.idea/
+notes/
 
 # Default Python .gitignore from GitHub:
 # Byte-compiled / optimized / DLL files
