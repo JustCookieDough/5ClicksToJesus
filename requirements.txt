@@ -1,0 +1,5 @@
+hypothesis
+pytest
+python-ta~=2.7.0
+pygame==2.5.2
+flask

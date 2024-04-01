@@ -1,8 +1,12 @@
+"""
+# TODO: write description
+"""
 from __future__ import annotations
 import gzip
 from typing import Any
-import csv
-import os
+# import csv
+# import os
+
 
 class _Node:
     """A node in a graph used to represent a Wikipedia page.
@@ -16,28 +20,29 @@ class _Node:
 
     Representation Invariants:
         - self not in self.out_neighbors
-        - self.id >= 0
-        - self.next_node_to_target != self.id`
+        - self.id_num >= 0
+        - self.next_node_to_target != self.id_num
         - self.next_node_to_target in out_neighbors
     """
-    id: int
+    id_num: int
     out_neighbors: list[_Node]
     in_neighbors: list[_Node]
     next_node_to_target: _Node
 
-    def __init__(self, id: int, out_neighbors: list[_Node]=[], in_neighbors: list[_Node]=[]) -> None:
+    def __init__(self, id_num: int, out_neighbors: list[_Node],
+                 in_neighbors: list[_Node]) -> None:
         """Initialize a new node with the given item and neighbours."""
-        self.id = id
+        self.id_num = id_num
         self.out_neighbors = out_neighbors
         self.in_neighbors = in_neighbors
-        self.next_node_to_target = None
+        # self.next_node_to_target = None
 
 
 class Graph:
     """A graph used to represent the out_neighbors between Wikipedia pages.
 
     Representation Invariants:
-        - all(id == self._nodes[id].id for id in self._nodes)
+        - all(id_num == self._nodes[id_num].id_num for id_num in self._nodes)
     """
     # Private Instance Attributes:
     #     - _nodes:
@@ -50,16 +55,16 @@ class Graph:
         """Initialize an empty graph (no nodes or edges)."""
         self._nodes = {}
 
-    def add_node(self, id: Any) -> None:
-        """Add a node with the given id to this graph.
+    def add_node(self, id_num: Any) -> None:
+        """Add a node with the given id_num to this graph.
 
         The new node is not adjacent to any other nodes.
 
         Preconditions:
-            - id not in self._nodes
+            - id_num not in self._nodes
         """
-        if id not in self._nodes:
-            self._nodes[id] = _Node(id)
+        if id_num not in self._nodes:
+            self._nodes[id_num] = _Node(id_num, [], [])
 
     def add_edge(self, id1: Any, id2: Any) -> None:
         """Add an edge from the node with id1 to the node with id2 in this
@@ -96,24 +101,24 @@ class Graph:
             for node in self._nodes[curr].in_neighbors:
                 if node.next_node_to_target is None:
                     node.next_node_to_target = self._nodes[curr]
-                    q.append(node.id)
+                    q.append(node.id_num)
 
-    def get_path(self, id: int) -> list[int]:
-        """Return a list of the id's of the shortest path to the target. Returns an empty list if
-        this id is not connected to the target.
+    def get_path(self, id_num: int) -> list[int]:
+        """Return a list of the id_num's of the shortest path to the target. Returns an empty list if
+        this id_num is not connected to the target.
 
-        Raise a ValueError if id is not in this dataset.
+        Raise a ValueError if id_num is not in this dataset.
         """
         path = []
-        if id not in self._nodes:
+        if id_num not in self._nodes:
             raise ValueError
-        curr = self._nodes[id]
+        curr = self._nodes[id_num]
         if curr.next_node_to_target is None:
             return []
-        path.append(curr.id)
-        while curr.id != self.target_id:
+        path.append(curr.id_num)
+        while curr.id_num != self.target_id:
             curr = curr.next_node_to_target
-            path.append(curr.id)
+            path.append(curr.id_num)
         return path
 
 
@@ -121,12 +126,19 @@ class Database:
     """
     A Database with a corresponding Graph representing all Wikipedia pages as vertices and
     all connecting hyperlinks as edges. Has functionality to correlate titles to pages IDs.
-    """
 
-    def __init__(self, edge_file_path, title_file_path) -> None:
+    Instance Attributes:
+        - _titles: dict of page id number to title
+        - _graph = directed graph representing the pages and links between them
+    """
+    _titles: set
+    _graph: Graph
+
+    def __init__(self, edge_file_path: str, title_file_path: str) -> None:
         self._titles = self._load_titles(title_file_path)
         self._graph = self._load_graph(edge_file_path)
-        self._graph.compute_paths(1095706) # 60047 is the ID for page "Jesus" in the links.txt data.
+        self._graph.compute_paths(
+            1095706)  # 60047 is the ID for page "Jesus" in the links.txt data.
         # TODO: verify above input for new data
 
     def _load_titles(self, path: str) -> dict[int, str]:  # slow and bad but works
@@ -163,12 +175,12 @@ class Database:
                 graph.add_edge(int(edges[0]), int(edges[1]))
         return graph
 
-    def get_name_from_id(self, id: int) -> str:
+    def get_name_from_id(self, id_num: int) -> str:
         """
-        Returns a page's name when given its id
+        Returns a page's name when given its id_num
         """
-        if id in self._titles:
-            return self._titles[id]
+        if id_num in self._titles:
+            return self._titles[id_num]
         raise KeyError("name not in titles database")
 
     def get_id_from_name(self, name: str) -> int:
@@ -179,3 +191,21 @@ class Database:
             if self._titles[key] == name:
                 return key
         raise KeyError("id not in titles database")
+
+
+if __name__ == '__main__':
+    import python_ta.contracts
+
+    python_ta.contracts.check_all_contracts()
+
+    import doctest
+
+    doctest.testmod()
+
+    import python_ta
+
+    python_ta.check_all(config={
+        'extra-imports': ['gzip'],  # the names (strs) of imported modules
+        'allowed-io': [],  # the names (strs) of functions that call print/open/input
+        'max-line-length': 120
+    })
