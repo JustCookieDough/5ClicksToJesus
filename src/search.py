@@ -9,10 +9,6 @@ import gzip
 from typing import Any, Optional
 
 
-# import csv
-# import os
-
-
 class _Node:
     """A node in a graph used to represent a Wikipedia page.
 
@@ -136,15 +132,14 @@ class Database:
         - _titles: dict of page id number to title
         - _graph = directed graph representing the pages and links between them
     """
-    _titles: set
+    _titles: dict
     _graph: Graph
 
     def __init__(self, edge_file_path: str, title_file_path: str) -> None:
         self._titles = self._load_titles(title_file_path)
         self._graph = self._load_graph(edge_file_path)
         self._graph.compute_paths(
-            1095706)  # 60047 is the ID for page "Jesus" in the links.txt data.
-        # TODO: verify above input for new data
+            1095706)
 
     def _load_titles(self, path: str) -> dict[int, str]:  # slow and bad but works
         """
