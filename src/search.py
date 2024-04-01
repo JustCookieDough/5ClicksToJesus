@@ -1,9 +1,12 @@
 """
-# TODO: write description
+Description: Use a graph to represent the links between wikipedia pages to in order to calculate
+the shortest path to Jesus from any given page.
+Date: 2024-04-01
+Authors: Maxwell Antao Zhang, Yin Ming Chan, Alex Lewis, Scott Angelides
 """
 from __future__ import annotations
 import gzip
-from typing import Any
+from typing import Any, Optional
 # import csv
 # import os
 
@@ -27,7 +30,7 @@ class _Node:
     id_num: int
     out_neighbors: list[_Node]
     in_neighbors: list[_Node]
-    next_node_to_target: _Node
+    next_node_to_target: Optional[_Node]
 
     def __init__(self, id_num: int, out_neighbors: list[_Node],
                  in_neighbors: list[_Node]) -> None:
@@ -35,7 +38,7 @@ class _Node:
         self.id_num = id_num
         self.out_neighbors = out_neighbors
         self.in_neighbors = in_neighbors
-        # self.next_node_to_target = None
+        self.next_node_to_target = None
 
 
 class Graph:
@@ -145,11 +148,6 @@ class Database:
         """
         Using the data given from path, loads the Wikipedia page titles into a dict relating
         {id: name}
-
-        # TODO: rewrite for wikidump
-        ^^^ Removed the previous to-do since it was redundant. I think it's okay if the wikidump is the one sent on
-        insta with google drive link, If im not mistaken, that is also data separated with spaces and should work for
-        this, please confirm.
         """
         out_dict = {}
         with gzip.open(path, "r") as file:
