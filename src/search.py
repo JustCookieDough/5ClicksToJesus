@@ -7,6 +7,8 @@ Authors: Maxwell Antao Zhang, Yin Ming Chan, Alex Lewis, Scott Angelides
 from __future__ import annotations
 import gzip
 from typing import Any, Optional
+
+
 # import csv
 # import os
 
@@ -189,6 +191,14 @@ class Database:
             if self._titles[key] == name:
                 return key
         raise KeyError("id not in titles database")
+
+    def get_path(self, id_num: int) -> list[int]:
+        """Return a list of the id_num's of the shortest path to the target. Returns an empty
+        list if this id_num is not connected to the target.
+
+        Raise a ValueError if id_num is not in this dataset.
+        """
+        return self._graph.get_path(id_num)
 
 
 if __name__ == '__main__':

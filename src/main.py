@@ -4,5 +4,7 @@ the shortest path to Jesus from any given page.
 Date: 2024-04-01
 Authors: Maxwell Antao Zhang, Yin Ming Chan, Alex Lewis, Scott Angelides
 """
+from app import App
 
-# TODO: write this file.
+app = App("links.txt.gz", "pages.txt.gz")
+app.run()
