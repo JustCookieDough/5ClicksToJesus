@@ -3,7 +3,9 @@ from flask import Flask, render_template, request
 from search import Database
 
 # setting up database and app
-db = Database("../datasets/old/edges.txt.gz", "../datasets/pages.txt.gz")
+print('building database... (this is going to take a while)')
+db = Database("../datasets/2010/links.txt.gz", "../datasets/2010/pages.txt.gz")
+print('done! setting up flask app...')
 app = Flask(__name__)
 
 

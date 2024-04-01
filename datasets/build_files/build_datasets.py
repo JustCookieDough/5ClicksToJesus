@@ -28,7 +28,7 @@ def main():
     with gzip.open(PAGES_PATH, "r") as db, open("pages.txt", "w") as out:
         make_page_db(db, out, version.pages)
     print("done!\n")
-    
+
     # ns0 dict
     print("making dictionary of page names/ids in namespace 0...")
     with gzip.open(PAGES_PATH, "r") as db:
@@ -44,7 +44,7 @@ def main():
     # line db
     print("making line database... (this takes forever, so settle in)")
     with gzip.open(LINKS_PATH, "r") as db, open("links.txt", "w") as out:
-        make_link_db(db, out, ns0, rd, version.links)
+        make_link_db(db, out, ns0, rd, version.links, VERSION == "1.15")
     print("done!\n")
 
     print("all done! enjoy your databases! (i recommend compressing them with gzip -9 for space reasons)") # yay, done!

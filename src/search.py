@@ -156,15 +156,7 @@ class Database:
         """
         graph = Graph()
         with gzip.open(path, 'r') as file:
-            i = 0
             for line in file:
-                # everything between this is debug stuff
-                if i % 640000 == 0:
-                    os.system('cls' if os.name == 'nt' else 'clear')
-                    print(str(round(i/6238429, 1)) + "%")
-                i += 1
-                # end debug stuff
-
                 edges = str(line, "utf-8").strip().split(" ")
                 graph.add_node(int(edges[0]))
                 graph.add_node(int(edges[1]))
