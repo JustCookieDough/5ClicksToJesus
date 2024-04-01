@@ -37,12 +37,12 @@ class App:
 
             try:
                 start_id = self.db.get_id_from_name(start_page.replace(" ", "_"))
-            except:
+            except KeyError:
                 return render_template("bad-page.jinja", page=start_page)
 
             try:
                 path_ids = self.db.get_path(start_id)[:-1]  # removes jesus from end of list
-            except:
+            except KeyError:
                 return render_template("no-path.jinja", page=start_page)
 
             return render_template("solution.jinja", sites=self.ids_to_sites_dicts(path_ids),
