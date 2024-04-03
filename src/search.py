@@ -9,6 +9,7 @@ import gzip
 from typing import Any, Optional
 from io import FileIO
 
+
 class _Node:
     """A node in a graph used to represent a Wikipedia page.
 
@@ -120,8 +121,8 @@ class Graph:
             curr = curr.next_node_to_target
             path.append(curr.id_num)
         return path
-    
-    def add_node_with_path(self, id_num: int, next_node_id: int):
+
+    def add_node_with_path(self, id_num: int, next_node_id: int) -> None:
         """
         Adds node with id "id_num" and next_node_in_path "next_node_id" to the graph.
 
@@ -133,16 +134,20 @@ class Graph:
 
         # add the next node w/o path if next node dne
         if next_node_id not in self._nodes:
-                self._nodes[next_node_id] = _Node(next_node_id, [], [])
+            self._nodes[next_node_id] = _Node(next_node_id, [], [])
 
         # if origin node doesn't exist, add it w/ path. else, add path if not already set
-        if id_num not in self._nodes: 
+        if id_num not in self._nodes:
             self._nodes[id_num] = _Node(id_num, [], [], self._nodes[next_node_id])
-        else: 
+        else:
             if self._nodes[id_num].next_node_to_target is None:
                 self._nodes[id_num].next_node_to_target = self._nodes[next_node_id]
-            
-        
+
+    def get_nodes(self) -> list[_Node]:
+        """
+        Getter for _nodes. Returns a dictionary of id: _Node.
+        """
+        return list(self._nodes.values())
 
 
 class Database:
@@ -157,7 +162,7 @@ class Database:
     _titles: dict[int, str]
     _graph: Graph
 
-    def __init__(self, edge_file_path: str, title_file_path: str, use_edge_save_state: bool = False, 
+    def __init__(self, edge_file_path: str, title_file_path: str, use_edge_save_state: bool = False,
                  precompute: bool = True) -> None:
         # load titles from db and save in dict
         self._titles = self._load_titles(title_file_path)
@@ -169,9 +174,6 @@ class Database:
             self._graph = self._load_graph(edge_file_path)
             if precompute:
                 self._graph.compute_paths(1095706)
-                
-                
-            
 
     def _load_titles(self, path: str) -> dict[int, str]:  # slow and bad but works
         """
@@ -182,7 +184,7 @@ class Database:
         with gzip.open(path, "r") as file:
             for line in file:
                 data = str(line, 'utf-8').strip().split(" ")
-                out_dict[int(data[0])] = str(data[1]).replace("\\'", "'").replace('\\"','"').replace('\\\\', '\\')
+                out_dict[int(data[0])] = str(data[1]).replace("\\'", "'").replace('\\"', '"').replace('\\\\', '\\')
         return out_dict
 
     def _load_graph(self, path: str) -> Graph:
@@ -199,24 +201,24 @@ class Database:
                 graph.add_node(int(edges[1]))
                 graph.add_edge(int(edges[0]), int(edges[1]))
         return graph
-    
+
     def _load_graph_from_save_state(self, path: str) -> Graph:
         """
         Loads graph from a save state. This creates verticies for all pages in the dataset, but does not save all of the
         edges. Instead, it only populates the "next_node_in_path" variable, allowing for the fastest path calculations
         necessary for the "get_path" function to run.
-        
-        This is meant to save on memory usage and load time, and is not recommended for a hypothetical production 
-        deployment. However, considering loading the whole dataset and building the graph takes an hour and uses >14gb 
-        of ram (thanks hashtables!), this is necessary for a dataset of this size to run on anything short of a large 
-        server. We tried our best to optimize memory usage, but its really hard to load all of 2023 Wikipedia in a way 
+
+        This is meant to save on memory usage and load time, and is not recommended for a hypothetical production
+        deployment. However, considering loading the whole dataset and building the graph takes an hour and uses >14gb
+        of ram (thanks hashtables!), this is necessary for a dataset of this size to run on anything short of a large
+        server. We tried our best to optimize memory usage, but its really hard to load all of 2023 Wikipedia in a way
         that doesnt crush your dreams.
         """
         graph = Graph()
         with gzip.open(path, 'r') as file:
             for line in file:
                 edge = str(line, "utf-8").strip().split(" ")
-                if (edge[0] == edge[1]):
+                if edge[0] == edge[1]:
                     graph.target_id = int(edge[0])
                 graph.add_node_with_path(int(edge[0]), int(edge[1]))
         return graph
@@ -245,30 +247,17 @@ class Database:
         Raise a ValueError if id_num is not in this dataset.
         """
         return self._graph.get_path(id_num)
-    
-    def make_save_state(self, file: FileIO):
+
+    def make_save_state(self, file: FileIO) -> None:
         """Writes a save state file that saves the node id's and next nodes in path for all nodes in the graph.
 
         Used to make low memory dataset.
         """
-        for node in self._graph._nodes.values():
+        for node in self._graph.get_nodes():
             next_id = node.next_node_to_target.id_num if node.next_node_to_target is not None else -1
             file.write(f"{node.id_num} {next_id}\n")
 
 
 if __name__ == '__main__':
-    import python_ta.contracts
-
-    python_ta.contracts.check_all_contracts()
-
-    import doctest
-
-    doctest.testmod()
-
-    import python_ta
-
-    python_ta.check_all(config={
-        'extra-imports': ['gzip'],  # the names (strs) of imported modules
-        'allowed-io': [],  # the names (strs) of functions that call print/open/input
-        'max-line-length': 120
-    })
+    from tests import run_tests
+    run_tests()

@@ -10,13 +10,42 @@ our project looking pretty!
 
 ### Some pages to try out:
 - Basic Test Cases
-    - United Kingdom  (close)
-    - Harry Potter  (medium)
-    - Methane  (far)
-    - Jesus  (distance 0)
-    - [not found atm]  (not connected)
+    - Jesus                               (distance 0)
+    - Harry Potter                        (distance 1)
+    - Methane                             (distance 2)
+    - Stardew Valley                      (distance 3)
+    - Inter frame                         (distance 4)
+    - Buccaneer Bay (radio play)          (distance 5)
+    - Curtiss H                           (not connected)
+
 - Special Charcters
     - Sid Meier's Pirates!  (single quote)
     - Barack Obama "Joker" poster  (double quote)
     - \o/  (backslash)
-- More cool test cases to come!
+    
+- Every Distance 5 Wikipedia Page:
+    - Federation of Manufacturing Opticians
+    - USS Bonito
+    - Caspar CLE 16
+    - Centre for Indian Christian Archaeological Research
+    - IEC 61010
+    - Digital nerve
+    - Buccaneer Bay (radio play)
+    - Zabnik
+    - Home Care Insight
+    - Marow
+    - Khen (DJ)
+    - Gisvan
+    - Haruhisa Soda
+    - Golam Kabud
+    - Qovaq
+    - Operating capacity
+    - Ribosomal rescue factor
+    - Feng Wu
+    - Sawsan Abd-Elrahman Hakim
+    - MOS:EM
+    - Liu Ching
+    - Socket FMx
+    - Alaa Fouad
+    - Australian Stages
+    - 栄町駅

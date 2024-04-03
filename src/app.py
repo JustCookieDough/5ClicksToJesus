@@ -44,8 +44,8 @@ while selection not in ("1", "2", "3", "4", "5"):
     print('select a dataset mode to build in (build times are estimates):')
     print(' (1) sample dataset (distance 2 or less from jesus) (10s) ')
     print(' (2) current dataset, build from save state (15s)')
-    print(' (3) 2010 dataset, full precompute (15min)')
-    print(' (4) current dataset, full precompute (>1hr)')
+    print(' (3) 2010 dataset, full compute (15min)')
+    print(' (4) current dataset, full compute (>1hr)')
     print(' (5) pyta testing \n')
     selection = input("which mode? ")
 
@@ -97,22 +97,23 @@ def solution() -> str:
     Returns the rendered DOM as a string.
     """
     start_page = request.args.get('page').strip()   # parse request arguments and format for db use
+    escaped_page = start_page.replace('"', '&quot;')
 
     try:
         start = db.get_id_from_name(start_page.replace(" ", "_"))
-    except KeyError:
-        return render_template("bad-page.jinja", page=start_page)       # page not in titles db
+    except KeyError:  # page not in titles db
+        return render_template("bad-page.jinja", page=escaped_page)       
 
     try:
         path = db.get_path(start)
-    except ValueError:
-        return render_template("not-in-graph.jinja", page=start_page)   # page not in graph, but in title (only samples)
+    except ValueError:  # page not in graph, but in title (only samples)
+        return render_template("not-in-graph.jinja", pape=escaped_page)   
 
-    if path == []:
-        return render_template("no-path.jinja", page=start_page)        # no path found
+    if path == []:  # no path found
+        return render_template("no-path.jinja", page=escaped_page)        
 
-    return render_template("solution.jinja", sites=ids_to_sites_dicts(path),
-                           clicks=len(path), start=start_page)          # normal page (path found!)
+    return render_template("solution.jinja", sites=ids_to_sites_dicts(path[:-1]),
+                           clicks=len(path) - 1, start=escaped_page)  # normal page (path found!)
 
 ########################################################################################################################
 # helper functions
