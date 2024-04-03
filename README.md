@@ -2,11 +2,25 @@
 
 Dataset taken from [the dump of English Wikipedia taken by the Wikimedia Foundation on 2024/03/01](https://dumps.wikimedia.org/enwiki/20240301/)
 
-We converted the original data from MySQL dumps into gzip'ed CSV files, and removed any data not relevant to our project.
+We converted the original data from MySQL dumps into gzip'ed text files, and removed any data not relevant to our project.
 Further, we converted all links to redirect pages found in the links table into links that go directly to the final page.
 
 Written in Python with a Flask frontend using Jinja2 template files for the web stuff. Mostly just basic stuff to keep
 our project looking pretty!
+
+### Distance Breakdown
+|Distance|Count|
+|---|---|
+|0|1|
+|1|14713|
+|2|1440814|
+|3|5219515|
+|4|131984|
+|5|25|
+|6+|0|
+|unreachable|1165|
+
+This means that, barring the 1165 pages that are completely disconnected from the Wikipedia link network, you can start from any page on Wikipedia and reach Jesus in 5 clicks or less!
 
 ### Some pages to try out:
 - Basic Test Cases
