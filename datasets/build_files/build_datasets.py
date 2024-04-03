@@ -1,16 +1,27 @@
+"""
+this is a helperfile that assists in the creation of datasets, and is not used in the main part of our project. 
+as such it is not as well documented as the files in the main part. it is well written (we hope), so it should be pretty
+readable without the documentation. if you would like to see some more documentation here, let us know!
 
+also, this is just a main to make the process of building a db marginally easier. the real processing is in the other
+files in this folder. check it out! we put a ton of work into it (mostly cause we didn't have much of a choice)
+"""
+
+# imports!
 import gzip, os
 from build_link_dataset import make_db as make_link_db
 from build_page_dataset import make_ns0_dict, make_db as make_page_db
 from build_redirect_dict import make_redirect_dict
 from datatypes import Version
 
+# config variables!
 PAGES_PATH      = "dumps/2010-03-12/enwiki-20100312-page.sql.gz"
 LINKS_PATH      = "dumps/2010-03-12/enwiki-20100312-pagelinks.sql.gz"
 REDIRECTS_PATH  = "dumps/2010-03-12/enwiki-20100312-redirect.sql.gz"
 
 VERSION = "1.15"  # MediaWiki version (only supports 1.41 and 1.15 cause thats all we need)
 
+# main!
 def main():
     version = Version(VERSION)
 
@@ -18,7 +29,20 @@ def main():
     os.system('cls' if os.name == 'nt' else 'clear')
 
     # print some nice ascii art!
-    print("  _      __   _    __     _      __                    \n | | /| / /  (_)  / /__  (_) ___/ / __ __  __ _    ___ \n | |/ |/ /  / /  /  '_/ / / / _  / / // / /  ' \\  / _ \\\n |__/|__/  /_/  /_/\\_\\ /_/  \\_,_/  \\_,_/ /_/_/_/ / .__/\n                                                /_/    \n   ___         __                   __                 \n  / _ \\ ___ _ / /_ ___ _  ___ ___  / /_                \n / // // _ `// __// _ `/ (_-</ -_)/ __/                \n/____/ \\_,_/ \\__/ \\_,_/ /___/\\__/ \\__/                 \n                                                       \n   ___          _    __     __                         \n  / _ ) __ __  (_)  / / ___/ / ___   ____              \n / _  |/ // / / /  / / / _  / / -_) / __/              \n/____/ \\_,_/ /_/  /_/  \\_,_/  \\__/ /_/                 \n")
+    print("  _      __   _    __     _      __                    ")
+    print(" | | /| / /  (_)  / /__  (_) ___/ / __ __  __ _    ___ ")
+    print(" | |/ |/ /  / /  /  '_/ / / / _  / / // / /  ' \  / _ \\")
+    print(" |__/|__/  /_/  /_/\_\ /_/  \_,_/  \_,_/ /_/_/_/ / .__/")
+    print("                                                /_/    ")
+    print("   ___         __                   __                 ")
+    print("  / _ \ ___ _ / /_ ___ _  ___ ___  / /_                ")
+    print(" / // // _ `// __// _ `/ (_-</ -_)/ __/                ")
+    print("/____/ \_,_/ \__/ \_,_/ /___/\__/ \__/                 ")
+    print("                                                       ")
+    print("   ___          _    __     __                         ")
+    print("  / _ ) __ __  (_)  / / ___/ / ___   ____              ")
+    print(" / _  |/ // / / /  / / / _  / / -_) / __/              ")
+    print("/____/ \_,_/ /_/  /_/  \_,_/  \__/ /_/                 ")
 
     # begin!
     print("starting database making! this is gonna take a while, so grab some tea/coffee and chillax!\n")
@@ -49,5 +73,6 @@ def main():
 
     print("all done! enjoy your databases! (i recommend compressing them with gzip -9 for space reasons)") # yay, done!
 
+# run that jawn
 if __name__ == "__main__":
     main()

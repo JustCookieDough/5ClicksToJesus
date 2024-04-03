@@ -3,6 +3,7 @@ converts wikidump compressed mysqldump database dumps of wikipedia's `page` tabl
 that can be used in the app. removes all data not used in our project.
 """
 
+# imports
 import re
 from io import FileIO
 from datatypes import Page, DatabaseInfo
@@ -67,7 +68,7 @@ def make_ns0_dict(db_file: FileIO, db_info: DatabaseInfo) -> dict[str, int]:
     return out_dict
 
 
-# extra stuff
+# extra stuff (sheild your eyes this stuff is spicy)
 
 def reverse_db_file(db_file: FileIO, out_file: FileIO) -> None:
     while True:
@@ -133,3 +134,5 @@ def count_valid(pages: list[Page]) -> float:
         if page.is_valid():
             count += 1
     return count
+
+# end extra stuff

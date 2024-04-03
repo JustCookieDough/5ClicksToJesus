@@ -1,4 +1,9 @@
+"""
+This is where all of the classes that i use other places go! there isnt any actual processing here, just defining some 
+stuff. thanks for stopping by!
+"""
 
+# represents links, basically just edges
 class Link:
     start: int
     end: int
@@ -8,6 +13,7 @@ class Link:
         self.end = end_id
 
 
+# an object that represents page information. mostly just has some helpers that make other code more readable
 class Page:
     page_id: int
     _namespace: int
@@ -31,8 +37,9 @@ class Page:
     
     def is_ns0(self) -> bool:
         return self._namespace == 0
-    
 
+   
+# literally just some variables. could write as a dataclass but im ~not doing that~
 class DatabaseInfo:
     header_size: int
     pattern: str
@@ -42,9 +49,8 @@ class DatabaseInfo:
         self.header_size = header_size
 
 
+# wanted to abstract away version nonsense. also makes it marginally easier to implement different mediawiki versions!
 class Version:
-
-
     def __init__(self, version: str) -> None:
         if version == "1.41":
             self.links = DatabaseInfo(43, "(\d+),(\d+),'(.+?)',(\d+),")

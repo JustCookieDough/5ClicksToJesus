@@ -1,8 +1,7 @@
 # project specific stuff
-datasets/*.txt
-datasets/*.sql
+datasets/**/*.txt
+datasets/**/*.sql
 datasets/dumps/
-datasets/bad_garbage_dataset_that_i_hate/*.txt
 datasets/current/links.txt.gz
 datasets/2010/links.txt.gz
 
