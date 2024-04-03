@@ -28,10 +28,10 @@ from tests import run_tests
 # intro text :D
 os.system('cls' if os.name == 'nt' else 'clear')  # clears the terminal
 print('    ______ ______ ___       __')
-print('   / ____// ____/|__ \     / /')
-print('  /___ \ / /     __/ /__  / / ')
+print('   / ____// ____/|__ \\     / /')
+print('  /___ \\ / /     __/ /__  / / ')
 print(' ____/ // /___  / __// /_/ /  ')
-print('/_____/ \____/ /____/\____/   ')
+print('/_____/ \\____/ /____/\\____/   ')
 print('\n5 Clicks To Jesus: CSC111 Project 2')
 print('by scott, alex, max, and ming!\n\n')
 
@@ -78,6 +78,7 @@ elif selection == 5:
 print('done! setting up flask app...')
 app = Flask(__name__)
 
+
 ########################################################################################################################
 # webserver endpoints
 ########################################################################################################################
@@ -109,8 +110,8 @@ def solution() -> str:
     except ValueError:  # page not in graph, but in title (only samples)
         return render_template("not-in-graph.jinja", pape=escaped_page)   
 
-    if path == []:  # no path found
-        return render_template("no-path.jinja", page=escaped_page)        
+    if path == []:
+        return render_template("no-path.jinja", page=start_page)        # no path found
 
     return render_template("solution.jinja", sites=ids_to_sites_dicts(path[:-1]),
                            clicks=len(path) - 1, start=escaped_page)  # normal page (path found!)
@@ -142,6 +143,7 @@ def prettify(string: str) -> str:
     Prettifies strings by replacing underscores with spaces
     """
     return string.replace("_", " ")
+
 
 ########################################################################################################################
 # running the app

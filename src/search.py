@@ -10,6 +10,7 @@ from typing import Any, Optional
 from io import FileIO
 
 
+
 class _Node:
     """A node in a graph used to represent a Wikipedia page.
 
@@ -94,8 +95,9 @@ class Graph:
         """
         if target_id not in self._nodes:
             raise ValueError
-        self._nodes[target_id].next_node_to_target = self._nodes[target_id]  # this is stupid, but it works, so
-        self.target_id = target_id                                           # therefore it is not stupid :D
+        self._nodes[target_id].next_node_to_target = self._nodes[
+            target_id]  # this is stupid, but it works, so
+        self.target_id = target_id  # therefore it is not stupid :D
         q = [target_id]
         while len(q) != 0:
             curr = q.pop(0)
@@ -116,10 +118,9 @@ class Graph:
         curr = self._nodes[id_num]
         if curr.next_node_to_target is None:
             return []
-        path.append(curr.id_num)
         while curr.id_num != self.target_id:
-            curr = curr.next_node_to_target
             path.append(curr.id_num)
+            curr = curr.next_node_to_target
         return path
 
     def add_node_with_path(self, id_num: int, next_node_id: int) -> None:
