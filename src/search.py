@@ -10,7 +10,6 @@ from typing import Any, Optional
 from io import FileIO
 
 
-
 class _Node:
     """A node in a graph used to represent a Wikipedia page.
 
@@ -95,9 +94,8 @@ class Graph:
         """
         if target_id not in self._nodes:
             raise ValueError
-        self._nodes[target_id].next_node_to_target = self._nodes[
-            target_id]  # this is stupid, but it works, so
-        self.target_id = target_id  # therefore it is not stupid :D
+        self._nodes[target_id].next_node_to_target = self._nodes[target_id]  # this is stupid, but it works, so
+        self.target_id = target_id                                           # therefore it is not stupid :D
         q = [target_id]
         while len(q) != 0:
             curr = q.pop(0)
@@ -257,8 +255,3 @@ class Database:
         for node in self._graph.get_nodes():
             next_id = node.next_node_to_target.id_num if node.next_node_to_target is not None else -1
             file.write(f"{node.id_num} {next_id}\n")
-
-
-if __name__ == '__main__':
-    from tests import run_tests
-    run_tests()

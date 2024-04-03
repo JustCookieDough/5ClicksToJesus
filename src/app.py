@@ -46,7 +46,7 @@ while selection not in ("1", "2", "3", "4", "5"):
     print(' (2) current dataset, build from save state (15s)')
     print(' (3) 2010 dataset, full compute (15min)')
     print(' (4) current dataset, full compute (>1hr)')
-    print(' (5) pyta testing \n')
+    print(' (5) pyta testing on all project files\n')
     selection = input("which mode? ")
 
 selection = int(selection)
@@ -70,8 +70,9 @@ elif selection == 4:
     db = Database("../datasets/2010/links.txt.gz", "../datasets/2010/pages.txt.gz")
 elif selection == 5:
     print("running tests!")
+    print("running with C9103, E9992, E9997, and E9998 disabled, per prof. sharmin's instruction in office hours\n")
     run_tests()
-    print("tests ran! halting execution! bye! :D")
+    print("\ntests ran! halting execution! bye! :D")
     exit()
 
 # building the flask app
@@ -103,18 +104,20 @@ def solution() -> str:
     try:
         start = db.get_id_from_name(start_page.replace(" ", "_"))
     except KeyError:  # page not in titles db
-        return render_template("bad-page.jinja", page=escaped_page)       
+        return render_template("bad-page.jinja", page=escaped_page)
 
     try:
         path = db.get_path(start)
     except ValueError:  # page not in graph, but in title (only samples)
-        return render_template("not-in-graph.jinja", pape=escaped_page)   
+        return render_template("not-in-graph.jinja", pape=escaped_page)
 
     if path == []:
+        if start_page == "Jesus":
+            return render_template("solution.jinja", sites=[], clicks=0, start="Jesus")
         return render_template("no-path.jinja", page=start_page)        # no path found
 
-    return render_template("solution.jinja", sites=ids_to_sites_dicts(path[:-1]),
-                           clicks=len(path) - 1, start=escaped_page)  # normal page (path found!)
+    return render_template("solution.jinja", sites=ids_to_sites_dicts(path),
+                           clicks=len(path), start=escaped_page)  # normal page (path found!)
 
 ########################################################################################################################
 # helper functions
