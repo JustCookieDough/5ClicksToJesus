@@ -28,10 +28,10 @@ from tests import run_tests
 # intro text :D
 os.system('cls' if os.name == 'nt' else 'clear')  # clears the terminal
 print('    ______ ______ ___       __')
-print('   / ____// ____/|__ \     / /')
-print('  /___ \ / /     __/ /__  / / ')
+print('   / ____// ____/|__ \\     / /')
+print('  /___ \\ / /     __/ /__  / / ')
 print(' ____/ // /___  / __// /_/ /  ')
-print('/_____/ \____/ /____/\____/   ')
+print('/_____/ \\____/ /____/\\____/   ')
 print('\n5 Clicks To Jesus: CSC111 Project 2')
 print('by scott, alex, max, and ming!\n\n')
 
@@ -78,6 +78,7 @@ elif selection == 5:
 print('done! setting up flask app...')
 app = Flask(__name__)
 
+
 ########################################################################################################################
 # webserver endpoints
 ########################################################################################################################
@@ -96,23 +97,29 @@ def solution() -> str:
 
     Returns the rendered DOM as a string.
     """
-    start_page = request.args.get('page').strip()   # parse request arguments and format for db use
+    start_page = request.args.get('page').strip()  # parse request arguments and format for db use
 
     try:
         start = db.get_id_from_name(start_page.replace(" ", "_"))
     except KeyError:
-        return render_template("bad-page.jinja", page=start_page)       # page not in titles db
+        return render_template("bad-page.jinja", page=start_page)  # page not in titles db
 
     try:
         path = db.get_path(start)
     except ValueError:
-        return render_template("not-in-graph.jinja", page=start_page)   # page not in graph, but in title (only samples)
+        return render_template("not-in-graph.jinja",
+                               page=start_page)  # page not in graph, but in title (only samples)
 
-    if path == []:
-        return render_template("no-path.jinja", page=start_page)        # no path found
+    if not path:
+        return render_template("no-path.jinja", page=start_page)  # no path found
 
-    return render_template("solution.jinja", sites=ids_to_sites_dicts(path),
-                           clicks=len(path), start=start_page)          # normal page (path found!)
+    if start == 1095706:
+        return render_template("solution.jinja", sites=[],
+                               clicks=0, start=start_page)
+    else:
+        return render_template("solution.jinja", sites=ids_to_sites_dicts(path),
+                               clicks=len(path), start=start_page)  # normal page (path found!)
+
 
 ########################################################################################################################
 # helper functions
@@ -141,6 +148,7 @@ def prettify(string: str) -> str:
     Prettifies strings by replacing underscores with spaces
     """
     return string.replace("_", " ")
+
 
 ########################################################################################################################
 # running the app
