@@ -8,7 +8,8 @@ datasets/2010/links.txt.gz
 # other basic stuff
 .DS_Store
 .idea/
-notes/
+.notes/
+submission_bs
 
 # Default Python .gitignore from GitHub:
 # Byte-compiled / optimized / DLL files
