@@ -8,6 +8,13 @@ Further, we converted all links to redirect pages found in the links table into 
 Written in Python with a Flask frontend using Jinja2 template files for the web stuff. Mostly just basic stuff to keep
 our project looking pretty!
 
+### Setup
+
+Clone the GitHub repo, then add two files to the `datasets/` folder
+
+1. [File 1](https://drive.google.com/file/d/13WHgstLPo9A7YO-7ZKhb-RTVvVltovBP/view?usp=sharing) should be added to `datasets/current/` and should be renamed `links.txt.gz`
+2. [File 2](https://drive.google.com/file/d/18fTUxN1QeKu_ofQwan-DPeLWXJuRCi7X/view?usp=sharing) should be added to `datasets/2010/` and should also be renamed `links.txt.gz`
+
 ### Distance Breakdown
 |Distance|Count|
 |---|---|
